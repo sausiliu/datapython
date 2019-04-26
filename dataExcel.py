@@ -1,3 +1,7 @@
+# coding=utf-8
+
+# filename可以直接从盘符开始，标明每一级的文件夹直到csv文件，
+
 import pandas as pd
 import numpy as np
 #import csv
