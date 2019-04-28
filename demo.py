@@ -13,30 +13,30 @@ import numpy as np
 # df=pd.read_csv('filename',header=None,sep=' ')
 # ---------------------
 
-data = pd.read_csv('./database.csv', index_col=0)
-# data = pd.read_csv('./sales-funnel.csv', index_col=0)
+# data = pd.read_csv('./database.csv', index_col=0)
+data = pd.read_csv('./sales-funnel.csv', index_col=0)
 # data = pd.read_csv('./test_database.csv', index_col=0)
 # data = pd.read_csv('./data.csv', index_col=0)
 
 # data.sort_values(['Year', "Happiness Score"], ascending=[True, False], inplace=True)
 
-#print('head:')
-#print(data.head())
-#print('\n\ntail:')
-#print(data.tail())
+print('head:')
+print(data.head())
+print('\n\ntail:')
+print(data.tail())
 
 # table = data.pivot_table(data, index=["Country", "Family"])
 # table = data.pivot_table(data, index=["区县"], values=["发现问题数"])
 # table = data.pivot_table(data, colums=["区县"], values=["发现问题数"])
 # table = data.pivot_table(data, columns=["区县"], index=["发现问题数"], aggfunc=np.sum)
-# table = data.pivot_table(data, index=["区县"], aggfunc=np.sum)
+table = data.pivot_table(data, index=["区县"], aggfunc=np.sum)
 #table = data.pivot_table(data, index=["区县"], values=["报警次数"])
-
-# table = pd.pivot_table(data,index=["Manager","Rep"],values=["Price"])
-table = data.pivot_table(data, index=["区县"], values=["Price"])
-# print(table.ix['范县'])
+print(type(table))
 
 print(table)
+
+# print(table.ix['范县'])
+
 print('\n\n------------:')
 #print(table)
 # table.to_csv('test.csv', encoding='utf_8_sig')

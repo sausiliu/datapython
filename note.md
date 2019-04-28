@@ -30,5 +30,9 @@
   • aggfunc: function to use for aggregation, defaulting to numpy.mean.
   ```
 
-  ![avatar](./imgs/api-pivot_table.png)
+  ![avatar](note/imgs/api-pivot_table.png)
 
+
+## REF
+
+[Pandas Pivot Table Explained](https://pbpython.com/pandas-pivot-table-explained.html)
