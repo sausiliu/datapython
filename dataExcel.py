@@ -30,10 +30,8 @@ data = pd.read_csv('./database.csv', index_col=0)
 # table = data.pivot_table(data, colums=["区县"], values=["发现问题数"])
 # table = data.pivot_table(data, columns=["区县"], index=["发现问题数"], aggfunc=np.sum)
 # table = data.pivot_table(data, index=["区县"], aggfunc=np.sum)
-#table = data.pivot_table(data, index=["区县"], values=["报警次数"])
 
-# table = pd.pivot_table(data,index=["Manager","Rep"],values=["Price"])
-table = data.pivot_table(data, index=["区县"], values=["Price"])
+table = data.pivot_table(data, index=["区县"], values=["Price"], aggfunc=np.sum)
 # print(table.ix['范县'])
 
 print(table)
