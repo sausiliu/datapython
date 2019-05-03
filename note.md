@@ -71,3 +71,16 @@
 ## REF
 
 [Pandas Pivot Table Explained](https://pbpython.com/pandas-pivot-table-explained.html)
+
+## MySQL
+
+### 配置
+
+在使用mysql时，需要实现局域网内的访问。mysql默认是绑定本地回环ip地址127.0.0.1。所以我们需要更改这个地址。  
+**/etc/mysql/mysql.conf.d/mysqld.cnf**
+
+```text
+# bind-address          = 127.0.0.1
+```
+
+cat /var/log/mysql/error.log
