@@ -33,6 +33,54 @@
   ![avatar](note/imgs/api-pivot_table.png)
 
 
+## Excel
+
+## 创建excel
+
+[xlwt官方网址](https://xlwt.readthedocs.io/en/latest/index.html)  
+使用xlwt来创建一个新的excel文件，整理操作函数感觉比较简单，复杂的应该是在对单元格的业务操作上。所以先来看看主要接口有哪些
+
+* 创建excel  
+    file = xlwt.Workbook()
+
+* 添加sheet  
+    sheet = file.add_sheet()  
+
+* 添加sheet  
+    [官方说明](https://xlwt.readthedocs.io/en/latest/api.html?highlight=write)  
+    sheet = write(r, c, label='', style=<xlwt.Style.XFStyle object>)  
+
+
+### 合并单元格的处理
+
+#### 读取
+
+由于对excel单元格的处理，遇到合并的情况时候，默认只会读取第一个cell的内容，其余的cell会返回空值。那么如何区分这个单元格本身就是空值，还是由于合并后返回的空值呢？
+
+* 获取合并单元格信息
+
+  **formatting_info**  
+  
+  > xlrd.open_workbook(r'demo.xlsx',formatting_info=True)  
+  > sheet = workbook.sheet_by_name('sheet')  
+  > sheet.merged_cells  
+  
+ 
+  打开文件时，设置formatting_info为True，默认为False。通过**merged_cells**
+
 ## REF
 
 [Pandas Pivot Table Explained](https://pbpython.com/pandas-pivot-table-explained.html)
+
+## MySQL
+
+### 配置
+
+在使用mysql时，需要实现局域网内的访问。mysql默认是绑定本地回环ip地址127.0.0.1。所以我们需要更改这个地址。  
+**/etc/mysql/mysql.conf.d/mysqld.cnf**
+
+```text
+# bind-address          = 127.0.0.1
+```
+
+cat /var/log/mysql/error.log
