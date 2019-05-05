@@ -41,7 +41,7 @@ on a.STAND_GRIDID=c.STAND_GRIDID"""
 sql_demo="""SELECT * FROM `performance_schema`.`file_summary_by_event_name` LIMIT 0,1000"""
 
 
-def read_data():
+def export_data():
     # db = pymysql.connect(
     #     host='10.10.8.52',
     #     user='xxxxx',
@@ -119,5 +119,5 @@ if __name__ == "__main__":
     # excel = xlwt.Workbook('text.xlsx')
 
     # sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
-    read_data()
+    export_data()
 
