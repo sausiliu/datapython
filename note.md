@@ -67,6 +67,41 @@
   
  
   打开文件时，设置formatting_info为True，默认为False。通过**merged_cells**
+  
+## Word
+
+python 操作word文档，可以使用python-docx包，里面包含了丰富的功能接口
+
+### 创建word文档
+
+```text
+from docx import Documen
+document = Document()
+document.save('./test.docx')
+```
+
+### paragraph
+
+### table
+
+### 样式
+
+#### table
+
+```text
+from docx.enum.style import WD_STYLE_TYPE
+styles = document.styles
+for s in styles:
+    if s.type == WD_STYLE_TYPE.TABLE:
+        document.add_paragraph("This style is : " + s.name)
+        document.add_table(3, 3, style=s)
+        document.add_paragraph('\n')
+```
+
+通过上面方式可以枚举出所有的样式, 例如下图所示
+![avatar](./note/imgs/table-style-1.png)
+
+![avatar](./note/imgs/table-style-2.png)
 
 ## REF
 
@@ -84,3 +119,4 @@
 ```
 
 cat /var/log/mysql/error.log
+
