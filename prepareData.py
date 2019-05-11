@@ -1,46 +1,45 @@
 import xlwt
 import pymysql
-
-# 创建数据表SQL语句
-# sql = """select * from
-# (select MEASURE_DATETIME as 1月,STAND_GRIDID,PM25 as 1_pm25 from SENSOR1.T_GRID_STAT_FOR_CITY_MONTHLY where
-# STAND_GRIDID in
-# (select  STAND_GRIDID from SENSOR1.T_GRID_OF_INTEREST where
-# MEASURE_DATETIME>='2019-01-01'
-# and MEASURE_DATETIME<='2019-01-31' and REASON not like '' and DELETE_FLAG=0
-# and CITY_ID in
-# (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_11'))
-# and MEASURE_DATETIME>='2019-01-01' and MEASURE_DATETIME<='2019-01-31'
-# and VAR_TYPE_ID=1 and REGION_LEVEL=0)a
-# left join
-# (select MEASURE_DATETIME as 2月,STAND_GRIDID,PM25 as 2_pm25 from SENSOR1.T_GRID_STAT_FOR_CITY_MONTHLY where
-# STAND_GRIDID in
-# (select  STAND_GRIDID from SENSOR1.T_GRID_OF_INTEREST where
-# MEASURE_DATETIME>='2019-01-01'
-# and MEASURE_DATETIME<='2019-01-31' and REASON not like '' and DELETE_FLAG=0
-# and CITY_ID in
-# (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_11'))
-# and MEASURE_DATETIME>='2019-02-01' and MEASURE_DATETIME<='2019-02-28'
-# and VAR_TYPE_ID=1 and REGION_LEVEL=0)b
-# on a.STAND_GRIDID=b.STAND_GRIDID
-# left join
-# (select MEASURE_DATETIME as 3月,STAND_GRIDID,PM25 as 3_pm25 from SENSOR1.T_GRID_STAT_FOR_CITY_MONTHLY where
-# STAND_GRIDID in
-# (select  STAND_GRIDID from SENSOR1.T_GRID_OF_INTEREST where
-# MEASURE_DATETIME>='2019-01-01'and MEASURE_DATETIME<='2019-01-31'
-# and REASON not like '' and DELETE_FLAG=0 and CITY_ID in
-# (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_11'))
-# and MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31'
-# and VAR_TYPE_ID=1 and REGION_LEVEL=0 )c
-# on a.STAND_GRIDID=c.STAND_GRIDID"""
-
-host = '10.112.115.35'
-user = 'root',
-passwd = '1',
-port = 3306,
+from docx import Document
 
 
-def export_data(sqls):
+def export_data_word(sqls):
+    document = Document()
+    document.add_heading(u'我的一个新文档', 0)
+
+    print(document)
+    table = document.add_table(rows=2, cols=2)
+
+
+    ## 执行多个sql查询语句，并写入excel
+    #for sql in sqls:
+    #    db = pymysql.connect(
+    #        host='10.10.30.25',
+    #        user='root',
+    #        passwd='1',
+    #        port=3306,
+    #        charset='utf8')
+
+    #    cursor = db.cursor()  # 建立游标
+    #    cursor.execute(sql)
+    #    data = cursor.fetchall()
+    #    fields = cursor.description
+    #    # print("len fields: {}".format(len(fields)))
+    #    # print("len data: {}".format(len(data)))
+
+    #    db.close()
+
+    # cells = table.add_row().cells
+    cell = table.cell(0, 0)
+    cell.text = "hello"
+    cell = table.cell(0, 1)
+    cell.text = "world"
+    #print(cell)
+
+    document.save('./test.docx')
+
+
+def export_data_excel(sqls):
 
     # Create xlsx
     excel = xlwt.Workbook()
@@ -51,7 +50,7 @@ def export_data(sqls):
     # 执行多个sql查询语句，并写入excel
     for sql in sqls:
         db = pymysql.connect(
-            host='10.112.115.35',
+            host='10.10.30.25',
             user='root',
             passwd='1',
             port=3306,
@@ -70,7 +69,7 @@ def export_data(sqls):
             print(fields[i][0])
             sheet.write(0, i+global_c, fields[i][0])
 
-        # 写入行名称
+        # 写内容
         for r in range(len(data)):
             for c in range(len(fields)):
                 #  print(sensor_data[r][c])
@@ -117,5 +116,6 @@ if __name__ == "__main__":
         """SELECT * FROM `performance_schema`.`file_summary_by_event_name` LIMIT 0,1000""",
         """SELECT * FROM `performance_schema`.`file_summary_by_event_name` LIMIT 0,1000""",
     ]
-    export_data(sqls)
+    #export_data_excel(sqls)
+    export_data_word(sqls)
 

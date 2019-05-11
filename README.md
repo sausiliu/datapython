@@ -8,3 +8,4 @@ numpy
 matplotlib  
 xlrd
 xlwt
+python-docx
