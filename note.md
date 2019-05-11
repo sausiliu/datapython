@@ -74,6 +74,7 @@ python 操作word文档，可以使用python-docx包，里面包含了丰富的�
 
 ### 创建word文档
 
+创建docx文件必要步骤
 ```text
 from docx import Documen
 document = Document()
@@ -81,6 +82,23 @@ document.save('./test.docx')
 ```
 
 ### paragraph
+
+> paragraph = document.add_paragraph(u'添加了文本')
+
+### 标题
+
+* 标题
+
+> document.add_heading('Document Title',0)
+
+* 二级标题
+
+> document.add_heading(u'二级标题',1)
+
+* 三级标题
+
+> document.add_heading(u'二级标题',2)
+
 
 ### table
 

@@ -2,7 +2,49 @@ import time
 import xlwt
 import xlrd
 import pymysql
+import pandas as pd
 from docx import Document
+
+
+def export_data_word(sql):
+    #print(sql)
+
+    # 创建word table
+    # 读取mysql数据，并且组合放入pandas中
+    first = True
+    for sql in sqls:
+        db = pymysql.connect(
+            host='10.10.30.25',
+            user='root',
+            passwd='1',
+            port=3306,
+            charset='utf8')
+
+        if first:
+            df = pd.read_sql(sql, con=db)
+        else:
+            df = pd.concat([df, pd.read_sql(sql, con=db)], sort=False)
+
+        db.close()
+        first = False
+
+    # print(df)
+
+    # 创建word
+    document = Document()
+    table = document.add_table(df.shape[0] + 1, df.shape[1], style='Table Grid')
+
+    # Add table
+    # add the header rows.
+    for j in range(df.shape[-1]):
+        table.cell(0, j).text = df.columns[j]
+
+    # add the rest of the data frame
+    for i in range(df.shape[0]):
+        for j in range(df.shape[-1]):
+            table.cell(i + 1, j).text = str(df.values[i, j])
+
+    document.save('./test.docx')
 
 
 def paste_table_word(path):
@@ -10,6 +52,7 @@ def paste_table_word(path):
     readbook = xlrd.open_workbook(path)
     sheet = readbook.sheet_by_index(0)
     #sheet = readbook.sheet_by_name()
+
     ncols = sheet.ncols
     nrows = sheet.nrows
     print("create a table {} x {} ".format(ncols, nrows))
@@ -17,6 +60,8 @@ def paste_table_word(path):
     document = Document()
     # document.add_heading(u'我的一个新文档', 0)
 
+    # export_data_word(sqls)
+    document.add_paragraph("This style is : ")
     table = document.add_table(rows=nrows, cols=ncols, style='Table Grid')
 
     for r in range(nrows):
@@ -25,11 +70,15 @@ def paste_table_word(path):
             cell = table.cell(r, c)
             cell.text = u'' + str(sheet.cell(r, c).value)
 
+    #table.add_row()
+    table.add_column(10)
+
     document.save('./test.docx')
 
 
 def export_data_excel(sqls):
 
+    # time.sleep(1)
     # Create xlsx
     excel = xlwt.Workbook()
     sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
@@ -87,11 +136,11 @@ if __name__ == "__main__":
 
     # sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
     sqls = [
-        """SELECT * FROM `information_schema`.`ENGINES` LIMIT 0, 1000"""
+        """SELECT * FROM `sys`.`sys_config` LIMIT 0, 1000"""
     ]
 
-    export_data_excel(sqls)
-    time.sleep(1)
+    # export_data_excel(sqls)
 
-    paste_table_word('./test.xls')
+    # paste_table_word('./test.xls')
+    export_data_word(sqls)
 
