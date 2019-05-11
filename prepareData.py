@@ -15,7 +15,7 @@ def paste_table_word(path):
     print("create a table {} x {} ".format(ncols, nrows))
 
     document = Document()
-    document.add_heading(u'我的一个新文档', 0)
+    # document.add_heading(u'我的一个新文档', 0)
 
     table = document.add_table(rows=nrows, cols=ncols, style='Table Grid')
 
