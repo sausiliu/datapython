@@ -6,8 +6,28 @@ import pandas as pd
 from docx import Document
 
 
-def export_data_word(sql):
-    #print(sql)
+def create_paragraph(sqls, document):
+    # print(sql)
+
+    # Add paragraph
+    text = df.at[1, 'set_time'] # 获取特定的值
+    document.add_paragraph(u'在这里可以添加文本:' + str(text) +
+                           u' :添加文本结束\n')
+
+    for sql in sqls:
+        db = pymysql.connect(
+            host='10.10.30.25',
+            user='root',
+            passwd='1',
+            port=3306,
+            charset='utf8')
+
+        db.close()
+    print(text)
+
+
+def create_table(sqls, document):
+    # print(sql)
 
     # 创建word table
     # 读取mysql数据，并且组合放入pandas中
@@ -28,10 +48,8 @@ def export_data_word(sql):
         db.close()
         first = False
 
-    # print(df)
+    print(df)
 
-    # 创建word
-    document = Document()
     table = document.add_table(df.shape[0] + 1, df.shape[1], style='Table Grid')
 
     # Add table
@@ -44,7 +62,7 @@ def export_data_word(sql):
         for j in range(df.shape[-1]):
             table.cell(i + 1, j).text = str(df.values[i, j])
 
-    document.save('./test.docx')
+    # 行求和df.iloc[0,0:].sum()
 
 
 def paste_table_word(path):
@@ -142,5 +160,8 @@ if __name__ == "__main__":
     # export_data_excel(sqls)
 
     # paste_table_word('./test.xls')
-    export_data_word(sqls)
 
+    # Create word
+    document = Document()
+    create_table(sqls, document)
+    document.save('./test.docx')

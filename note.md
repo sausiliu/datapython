@@ -136,5 +136,15 @@ for s in styles:
 # bind-address          = 127.0.0.1
 ```
 
+### 查看mysql状态
+> service mysql status
+
+### 查看错误日志信息
+
 cat /var/log/mysql/error.log
+
+
+### MySQL连接池
+
+[参考链接](https://blog.csdn.net/qq_42483967/article/details/81237953)
 
