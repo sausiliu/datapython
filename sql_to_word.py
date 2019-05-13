@@ -1,10 +1,21 @@
-import time
 import xlwt
 import xlrd
 import pymysql
 import pandas as pd
 from docx import Document
 # import data_connection_ffm as con
+
+global database=None
+
+
+def connect_mysql():
+    db = pymysql.connect(
+         host='10.211.55.5',
+         user='root',
+         passwd='1',
+         port=3306,
+         charset='utf8')
+    return db
 
 
 def create_paragraph1(sqls, document):
@@ -204,7 +215,9 @@ def set_style(name, height, bold=False):
 
 if __name__ == "__main__":
 
-    # sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
+    # 1. 链接数据库
+    database = connect_mysql()
+
     sqls = [
         """select month(MEASURE_DATETIME)as month,count(*) as count_interest_all from SENSOR1.T_GRID_OF_INTEREST 
         where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' 
@@ -247,3 +260,6 @@ if __name__ == "__main__":
     #excel = xlwt.Workbook()
     #export_data_excel(sqls, excel)
     #excel.save('test.xls')
+
+    # end: 关闭数据库
+    database.close()
