@@ -4,6 +4,7 @@ import pymysql
 import pandas as pd
 from decimal import Decimal
 from docx import Document
+from docx.oxml.ns import qn
 # import data_connection_ffm as con
 
 global database
@@ -173,15 +174,20 @@ if __name__ == "__main__":
     # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     # Create word
     document = Document()
+    # 设置为宋体
+    document.styles['Normal'].font.name = u'宋体'
+    document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+
+    # 添加文字
     sql1 = [ """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""]
     sql2 = [ """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""]
-
     create_paragraph1(sql1, document)
     create_paragraph2(sql2, document)
+
+    # 添加表格
     word_add_table(sqls, document)
 
     document.save('test.docx')
-
 
     # end: 关闭数据库
     database.close()
