@@ -45,7 +45,8 @@ def create_paragraph2(sqls, document):
     df = sql_to_pandas(sqls)
 
     # Add paragraph
-    text = df.at[0, 'count_interest_all'] # 获取特定的值
+    # text = df.at[0, 'count_interest_all'] # 获取特定的值
+    text = df.at[0, 'TOTAL_CONNECTIONS']  # 获取特定的值
     document.add_paragraph(u'22在这里可以添加文本:' + str(text) +
                            u' :添加文本结束\n')
     print(text)
@@ -74,7 +75,6 @@ def word_add_table(sqls, document):
 
 
 def paste_table_word(path):
-
     readbook = xlrd.open_workbook(path)
     sheet = readbook.sheet_by_index(0)
     # sheet = readbook.sheet_by_name()
@@ -175,13 +175,10 @@ if __name__ == "__main__":
     sql2 = [ """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""]
 
     create_paragraph1(sql1, document)
-    # create_paragraph2(sql2, document)
+    create_paragraph2(sql2, document)
+    word_add_table(sqls, document)
 
     document.save('test.docx')
-
-    # ----------------------
-    # time.sleep(1)
-    #export_data_excel(sqls, excel)
 
 
     # end: 关闭数据库
