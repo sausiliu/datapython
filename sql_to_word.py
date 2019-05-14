@@ -2,6 +2,7 @@ import xlwt
 import xlrd
 import pymysql
 import pandas as pd
+import matplotlib.pyplot as plt
 from decimal import Decimal
 from docx import Document
 from docx.oxml.ns import qn
@@ -61,6 +62,23 @@ def word_add_table(sqls, document):
     # 创建word table
     # 读取mysql数据，并且组合放入pandas中
     df = sql_to_pandas(sqls)
+
+    # df.plot(x='x..', y='y..')
+    # df.plot()
+    # plt.show()
+
+    # 取出某一列的数值
+    data = df['TOTAL_CONNECTIONS']
+    print('data: .....')
+    # 打印每个数值
+    print(data.values[0])
+    print(data.values[1])
+    print(data.values[2])
+
+    # 求和（某一列）
+    sum = df['TOTAL_CONNECTIONS'].sum()
+    print('sum: {}'.format(sum))
+
 
     table = document.add_table(df.shape[0] + 1, df.shape[1], style='Table Grid')
 
