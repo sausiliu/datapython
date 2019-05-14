@@ -2,6 +2,7 @@ import xlwt
 import xlrd
 import pymysql
 import pandas as pd
+from decimal import Decimal
 from docx import Document
 # import data_connection_ffm as con
 
@@ -37,7 +38,7 @@ def create_paragraph1(sqls, document):
     # Add paragraph
     # text = df.at[0, 'count_interest_all'] # 获取特定的值
     text = df.at[0, 'TOTAL_CONNECTIONS']  # 获取特定的值
-    document.add_paragraph(u'在这里可以添加文本:' + str(text+text) +
+    document.add_paragraph(u'在这里可以添加文本:' + str( Decimal((text+text)/2.1).quantize(Decimal("0.00")) ) +
                            u' :添加文本结束\n')
     print(text)
 
