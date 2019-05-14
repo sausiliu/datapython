@@ -26,6 +26,7 @@ def sql_to_pandas(sqls):
         else:
             df = pd.concat([df, pd.read_sql(sql, con=database)], sort=False)
         first = False
+    df = df.reset_index()
     print(df)
     return df
 
@@ -36,7 +37,7 @@ def create_paragraph1(sqls, document):
     # Add paragraph
     # text = df.at[0, 'count_interest_all'] # 获取特定的值
     text = df.at[0, 'TOTAL_CONNECTIONS']  # 获取特定的值
-    document.add_paragraph(u'在这里可以添加文本:' + str(text) +
+    document.add_paragraph(u'在这里可以添加文本:' + str(text+text) +
                            u' :添加文本结束\n')
     print(text)
 
