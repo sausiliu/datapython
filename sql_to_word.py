@@ -5,7 +5,7 @@ import pandas as pd
 from docx import Document
 # import data_connection_ffm as con
 
-global database=None
+global database
 
 
 def connect_mysql():
@@ -18,109 +18,45 @@ def connect_mysql():
     return db
 
 
-def create_paragraph1(sqls, document):
-    # print(sql)
-
+def sql_to_pandas(sqls):
     first = True
     for sql in sqls:
-        db = pymysql.connect(
-            charset='utf8')
-
         if first:
-            df = pd.read_sql(sql, con=db)
+            df = pd.read_sql(sql, con=database)
         else:
-            df = pd.concat([df, pd.read_sql(sql, con=db)], sort=False)
-
-        db.close()
+            df = pd.concat([df, pd.read_sql(sql, con=database)], sort=False)
         first = False
-
     print(df)
+    return df
 
+
+def create_paragraph1(sqls, document):
+    # print(sql)
+    df = sql_to_pandas(sqls)
     # Add paragraph
-    text = df.at[0, 'count_interest_all'] # 获取特定的值
+    # text = df.at[0, 'count_interest_all'] # 获取特定的值
+    text = df.at[0, 'TOTAL_CONNECTIONS']  # 获取特定的值
     document.add_paragraph(u'在这里可以添加文本:' + str(text) +
                            u' :添加文本结束\n')
-
     print(text)
 
 
 def create_paragraph2(sqls, document):
-    # print(sql)
-
-    first = True
-    for sql in sqls:
-        db = pymysql.connect(
-            host='10.10.8.52',
-            charset='utf8')
-
-        if first:
-            df = pd.read_sql(sql, con=db)
-        else:
-            df = pd.concat([df, pd.read_sql(sql, con=db)], sort=False)
-
-        db.close()
-        first = False
-
-    print(df)
+    df = sql_to_pandas(sqls)
 
     # Add paragraph
-
-    text = df.at[0, 'count_interest_28']  # 获取特定的值
-    document.add_paragraph(u'在这里可以添加文本2:' + str(text) +
-                           u' :添加文本结束\n')
-
-    print(text)
-
-
-def create_paragraph3(sqls, document):
-    # print(sql)
-
-    first = True
-    for sql in sqls:
-        db = pymysql.connect(
-            charset='utf8')
-
-        if first:
-            df = pd.read_sql(sql, con=db)
-        else:
-            df = pd.concat([df, pd.read_sql(sql, con=db)], sort=False)
-
-        db.close()
-        first = False
-
-    print(df)
-
-    # Add paragraph
-    text = df.at[0, 'count'] # 获取特定的值
-    # text = df.at[0, 'count_interest_28']  # 获取特定的值
-    document.add_paragraph(u'在这里可以添加文本:' + str(text) +
-                           u' :添加文本结束\n')
-
-    text = df.at[0, 'count']  # 获取特定的值
-    document.add_paragraph(u'在这里可以添加文本2:' + str(text) +
+    text = df.at[0, 'count_interest_all'] # 获取特定的值
+    document.add_paragraph(u'22在这里可以添加文本:' + str(text) +
                            u' :添加文本结束\n')
     print(text)
 
 
-def create_table(sqls, document):
+def word_add_table(sqls, document):
     # print(sql)
 
     # 创建word table
     # 读取mysql数据，并且组合放入pandas中
-    first = True
-    for sql in sqls:
-        db = pymysql.connect(
-            charset='utf8')
-
-        if first:
-            df = pd.read_sql(sql, con=db)
-        else:
-            df = pd.concat([df, pd.read_sql(sql, con=db)], sort=False)
-
-        db.close()
-        first = False
-
-    print(df)
+    df = sql_to_pandas(sqls)
 
     table = document.add_table(df.shape[0] + 1, df.shape[1], style='Table Grid')
 
@@ -156,7 +92,7 @@ def paste_table_word(path):
 
     for r in range(nrows):
         for c in range(ncols):
-            #print(sheet.cell(r, c))
+            # print(sheet.cell(r, c))
             cell = table.cell(r, c)
             cell.text = u'' + str(sheet.cell(r, c).value)
 
@@ -166,25 +102,19 @@ def paste_table_word(path):
     document.save('./test.docx')
 
 
-def export_data_excel(sqls, excel):
-
-    sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
+def export_data_excel(sqls, sheet):
 
     global_c = 0
 
+    cursor = database.cursor()  # 建立游标
     # 执行多个sql查询语句，并写入excel
     for sql in sqls:
-        db = pymysql.connect(
-            charset='utf8')
-
-        cursor = db.cursor()  # 建立游标
         cursor.execute(sql)
         data = cursor.fetchall()
         fields = cursor.description
         # print("len fields: {}".format(len(fields)))
         # print("len data: {}".format(len(data)))
 
-        db.close()
         # 写入行名称
         for i in range(len(fields)):
             # print(fields[i][0])
@@ -197,11 +127,9 @@ def export_data_excel(sqls, excel):
                 sheet.write(1+r, c+global_c, data[r][c])
 
         global_c = global_c + len(fields)
-    # sensor_data = cursor.fetchone()
 
 
 def set_style(name, height, bold=False):
-
     style = xlwt.XFStyle()  # 初始化样式
     font = xlwt.Font()
     font.name = name  # 'Times New Roman'
@@ -215,51 +143,46 @@ def set_style(name, height, bold=False):
 
 if __name__ == "__main__":
 
-    # 1. 链接数据库
+    # 1. 连接数据库
     database = connect_mysql()
 
+    # 准备sqls
+
     sqls = [
-        """select month(MEASURE_DATETIME)as month,count(*) as count_interest_all from SENSOR1.T_GRID_OF_INTEREST 
-        where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' 
-        and REASON not like '' and DELETE_FLAG=0 group by year(MEASURE_DATETIME),month(MEASURE_DATETIME)""",
-        """select month(MEASURE_DATETIME)as month,count(*) as count_interest_28 from SENSOR1.T_GRID_OF_INTEREST 
-        where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' and REASON not like '' and DELETE_FLAG=0 
-        and CITY_ID in (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_28') 
-        group by month(MEASURE_DATETIME)""",
-        """select CITY_NAME, COUNT(CITY_NAME) AS interest_reason from SENSOR1.T_GRID_OF_INTEREST 
-        where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' 
-        and REASON not like '' AND REASON LIKE '%且%'and DELETE_FLAG=0 
-        and CITY_ID in (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_28') 
-        group by CITY_NAME"""
+        """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000""",
+        """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000""",
+        """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""
     ]
 
-    # export_data_excel(sqls)
+    # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    #      This is a excel demo     $
+    # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-    # paste_table_word('./test.xls')
+    # Create a excel file
+    excel = xlwt.Workbook()
+    sheet = excel.add_sheet(u'sheet1', cell_overwrite_ok=True)
+    export_data_excel(sqls, sheet)
+    sheet = excel.add_sheet(u'sheet2', cell_overwrite_ok=True)
+    export_data_excel(sqls, sheet)
+    excel.save('test.xls')
 
+    # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    #      This is a word demo      $
+    # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     # Create word
     document = Document()
-
-    # create_table(sqls, document)
-    sql1 = ["""select month(MEASURE_DATETIME)as month,count(*) as count_interest_all from SENSOR1.T_GRID_OF_INTEREST 
-        where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' 
-        and REASON not like '' and DELETE_FLAG=0 group by year(MEASURE_DATETIME),month(MEASURE_DATETIME)"""]
-    sql2 = ["""select month(MEASURE_DATETIME)as month,count(*) as count_interest_28 from SENSOR1.T_GRID_OF_INTEREST 
-        where MEASURE_DATETIME>='2019-03-01' and MEASURE_DATETIME<='2019-03-31' and REASON not like '' and DELETE_FLAG=0 
-        and CITY_ID in (select CITY_ID from SENSOR1.T_DICT_CITY_GROUP where GROUP_ID='HOTGRID_28') 
-        group by month(MEASURE_DATETIME)"""]
+    sql1 = [ """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""]
+    sql2 = [ """SELECT * FROM `performance_schema`.`hosts` LIMIT 0, 1000"""]
 
     create_paragraph1(sql1, document)
-    create_paragraph2(sql2, document)
+    # create_paragraph2(sql2, document)
 
     document.save('test.docx')
 
     # ----------------------
     # time.sleep(1)
-    # Create xlsx
-    #excel = xlwt.Workbook()
     #export_data_excel(sqls, excel)
-    #excel.save('test.xls')
+
 
     # end: 关闭数据库
     database.close()
