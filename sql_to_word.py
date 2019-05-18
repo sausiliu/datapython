@@ -95,17 +95,10 @@ def word_add_table(sqls, document):
     # 行求和df.iloc[0,0:].sum()
 
 
-def paste_table_word(path):
-    readbook = xlrd.open_workbook(path)
-    sheet = readbook.sheet_by_index(0)
-    # sheet = readbook.sheet_by_name()
-
+def paste_table_word(sheet, document):
     ncols = sheet.ncols
     nrows = sheet.nrows
     print("create a table {} x {} ".format(ncols, nrows))
-
-    document = Document()
-    # document.add_heading(u'我的一个新文档', 0)
 
     # export_data_word(sqls)
     document.add_paragraph("This style is : ")
@@ -119,8 +112,6 @@ def paste_table_word(path):
 
     # table.add_row()
     table.add_column(10)
-
-    document.save('./test.docx')
 
 
 def export_data_excel(sqls, sheet):
