@@ -19,5 +19,5 @@ def dprint(*args):
 
         frame = BOLD(co.co_name)
 
-        print("%s %s" % (fname, "(%s:%d)" % (co.co_filename, co.co_firstlineno)))
+        print("%s %s" % (frame, "(%s:%d)" % (co.co_filename, co.co_firstlineno)))
         print(s)
