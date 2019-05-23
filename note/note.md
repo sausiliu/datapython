@@ -2,6 +2,12 @@
 
 记录开发过程的一些问题和心得
 
+## NumPy
+
+[NumPy教程](https://www.runoob.com/numpy/numpy-tutorial.html)
+
+## pandas
+
 
 ## 透视表
 
