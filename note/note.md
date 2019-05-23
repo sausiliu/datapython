@@ -30,7 +30,7 @@
   • aggfunc: function to use for aggregation, defaulting to numpy.mean.
   ```
 
-  ![avatar](note/imgs/api-pivot_table.png)
+  ![avatar](imgs/api-pivot_table.png)
 
 
 ## Excel
@@ -117,9 +117,9 @@ for s in styles:
 ```
 
 通过上面方式可以枚举出所有的样式, 例如下图所示
-![avatar](./note/imgs/table-style-1.png)
+![avatar](imgs/table-style-1.png)
 
-![avatar](./note/imgs/table-style-2.png)
+![avatar](imgs/table-style-2.png)
 
 ## REF
 
