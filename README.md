@@ -9,3 +9,4 @@ matplotlib
 xlrd
 xlwt
 python-docx
+opencv-python
