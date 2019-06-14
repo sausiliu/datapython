@@ -2,15 +2,16 @@ from windrose import WindroseAxes
 import pandas as pd
 import numpy as np
 
-# data = pd.read_csv('./wind.csv', index_col=0)
-# data = pd.read_csv('./wind.csv', usecols=[0])
 # 读取第一列
 data = pd.read_csv('./wind.csv', usecols=[0])
 # 行列矩阵转换一下
-data_values = data.values
-print(type(data_values))
-print(np.transpose(data_values)[0])
+#data_values = data.values
+#print(type(data_values))
+#print(np.transpose(data_values)[0])
 
+data = pd.read_excel('./wind.xlsx', sheet_name='wind')
+data_values = data.values
+print(np.transpose(data_values)[0])
 
 # 使用nmupy随机生成风速风向数组
 # ws = np.random.random(500) * 6
