@@ -11,3 +11,4 @@ xlrd
 xlwt
 python-docx
 opencv-python
+PyMySql
